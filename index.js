@@ -40,7 +40,7 @@ function upload(params) {
     s3.upload(params, (err, data) => {
       if (err) core.error(err);
       core.info(`uploaded - ${data}`);
-      core.info(`located - ${data}`);
+      core.info(`located - ${data.Location}`);
       resolve(data.Location);
     });
   });
