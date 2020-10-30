@@ -2405,6 +2405,9 @@ const DESTINATION_DIR = core.getInput('destination_dir', {
 const ENDPOINT = core.getInput('endpoint', {
   required: false
 });
+const CACHE_CONTROL = core.getInput('cache', {
+  required: false
+});
 
 const s3 = new S3({
   accessKeyId: AWS_KEY_ID,
@@ -2441,6 +2444,7 @@ function run() {
         ACL: 'public-read',
         Body: fileStream,
         Key: bucketPath,
+        CacheControl: CACHE_CONTROL ? CACHE_CONTROL : undefined,
         ContentType: lookup(p.path) || 'text/plain'
       };
       return upload(params);
