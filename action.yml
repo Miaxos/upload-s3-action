@@ -17,6 +17,9 @@ inputs:
   endpoint:
     description: 'endpoint'
     required: false
+  cache:
+    description: 'Cache control'
+    required: false
   source_dir:
     required: true
     description: 'directory to upload'
