@@ -33,7 +33,7 @@ const s3 = new S3({
   secretAccessKey: SECRET_ACCESS_KEY,
   endpoint: ENDPOINT,
 });
-const destinationDir = DESTINATION_DIR === '/' ? shortid() : DESTINATION_DIR;
+const destinationDir = DESTINATION_DIR;
 const paths = klawSync(SOURCE_DIR, {
   nodir: true
 });
