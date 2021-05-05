@@ -19,37 +19,37 @@ const path_1 = __importDefault(require("path"));
 const klaw_sync_1 = __importDefault(require("klaw-sync"));
 const mime_types_1 = require("mime-types");
 const AWS_KEY_ID = core_1.default.getInput('aws_key_id', {
-    required: true
+    required: true,
 });
 const SECRET_ACCESS_KEY = core_1.default.getInput('aws_secret_access_key', {
-    required: true
+    required: true,
 });
 const BUCKET = core_1.default.getInput('aws_bucket', {
-    required: true
+    required: true,
 });
 const SOURCE_DIR = core_1.default.getInput('source_dir', {
-    required: true
+    required: true,
 });
 const DESTINATION_DIR = core_1.default.getInput('destination_dir', {
-    required: false
+    required: false,
 });
 const ENDPOINT = core_1.default.getInput('endpoint', {
-    required: false
+    required: false,
 });
 const CACHE_CONTROL = core_1.default.getInput('cache', {
-    required: false
+    required: false,
 });
 const s3 = new s3_1.default({
     accessKeyId: AWS_KEY_ID,
     secretAccessKey: SECRET_ACCESS_KEY,
     endpoint: ENDPOINT,
 });
-const destinationDir = DESTINATION_DIR ? DESTINATION_DIR : '';
+const destinationDir = DESTINATION_DIR || '';
 const paths = klaw_sync_1.default(SOURCE_DIR, {
-    nodir: true
+    nodir: true,
 });
 function upload(params) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         s3.upload(params, (err, data) => {
             if (err)
                 core_1.default.error(err);
@@ -62,10 +62,12 @@ function upload(params) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const sourceDir = path_1.default.join(process.cwd(), SOURCE_DIR);
-        core_1.default.info("Starting Miaxos/s3");
-        const results = yield Promise.all(paths.map(p => {
+        core_1.default.info('Starting Miaxos/s3');
+        const results = yield Promise.all(paths.map((p) => {
             const fileStream = fs_1.default.createReadStream(p.path);
-            const bucketPath = destinationDir === '' ? path_1.default.relative(sourceDir, p.path) : path_1.default.join(destinationDir, path_1.default.relative(sourceDir, p.path));
+            const bucketPath = destinationDir === ''
+                ? path_1.default.relative(sourceDir, p.path)
+                : path_1.default.join(destinationDir, path_1.default.relative(sourceDir, p.path));
             console.log('bucketKey', bucketPath);
             console.log(destinationDir);
             console.log(path_1.default.relative(sourceDir, p.path));
@@ -74,8 +76,8 @@ function run() {
                 ACL: 'public-read',
                 Body: fileStream,
                 Key: bucketPath,
-                CacheControl: CACHE_CONTROL ? CACHE_CONTROL : undefined,
-                ContentType: mime_types_1.lookup(p.path) || 'text/plain'
+                CacheControl: CACHE_CONTROL || undefined,
+                ContentType: mime_types_1.lookup(p.path) || 'text/plain',
             };
             return upload(params);
         }));
@@ -83,11 +85,11 @@ function run() {
         core_1.default.info(`object locations - ${results}`);
         core_1.default.setOutput('object_key', destinationDir);
         core_1.default.setOutput('object_locations', results);
-        core_1.default.info("BORDEL DE MERDE FONCTIONNE");
+        core_1.default.info('BORDEL DE MERDE FONCTIONNE');
     });
 }
-run().catch(err => {
-    core_1.default.info("Error");
+run().catch((err) => {
+    core_1.default.info('Error');
     core_1.default.info(err);
     core_1.default.error(err);
     core_1.default.setFailed(err.message);
