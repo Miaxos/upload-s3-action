@@ -2433,7 +2433,7 @@ function upload(params) {
 async function run() {
   const sourceDir = path.join(process.cwd(), SOURCE_DIR);
   core.info("Starting Miaxos/s3");
-  const result = await Promise.all(
+  const results = await Promise.all(
     paths.map(p => {
       const fileStream = fs.createReadStream(p.path);
       const bucketPath = destinationDir === '' ? path.relative(sourceDir, p.path) : path.join(destinationDir, path.relative(sourceDir, p.path));
