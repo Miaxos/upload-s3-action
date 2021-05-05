@@ -2430,10 +2430,10 @@ function upload(params) {
   });
 }
 
-function run() {
+async function run() {
   const sourceDir = path.join(process.cwd(), SOURCE_DIR);
   core.info("Starting Miaxos/s3");
-  return Promise.all(
+  const result = await Promise.all(
     paths.map(p => {
       const fileStream = fs.createReadStream(p.path);
       const bucketPath = destinationDir === '' ? path.relative(sourceDir, p.path) : path.join(destinationDir, path.relative(sourceDir, p.path));
@@ -2449,8 +2449,14 @@ function run() {
         ContentType: lookup(p.path) || 'text/plain'
       };
       return upload(params);
-    })
-  );
+    }));
+
+    core.info(`object key - ${destinationDir}`);
+    core.info(`object locations - ${results}`);
+    core.setOutput('object_key', destinationDir);
+    core.setOutput('object_locations', results);
+    core.info("BORDEL DE MERDE FONCTIONNE");
+
 }
 
 run().catch(err => {
@@ -2459,16 +2465,6 @@ run().catch(err => {
     core.error(err);
     core.setFailed(err.message);
   });
-/*
-  .then(locations => {
-    core.info(`object key - ${destinationDir}`);
-    core.info(`object locations - ${locations}`);
-    core.setOutput('object_key', destinationDir);
-    core.setOutput('object_locations', locations);
-    core.info("over");
-    return undefined;
-  })
-  */
 
 
 /***/ }),
