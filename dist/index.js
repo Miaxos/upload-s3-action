@@ -80,36 +80,39 @@ function upload(params) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const sourceDir = path.join(process.cwd(), SOURCE_DIR);
-        core.info('Starting Miaxos/s3');
-        const results = yield Promise.all(paths.map((p) => {
-            const fileStream = fs.createReadStream(p.path);
-            const bucketPath = destinationDir === ''
-                ? path.relative(sourceDir, p.path)
-                : path.join(destinationDir, path.relative(sourceDir, p.path));
-            console.log('bucketKey', bucketPath);
-            console.log(destinationDir);
-            console.log(path.relative(sourceDir, p.path));
-            const params = {
-                Bucket: BUCKET,
-                ACL: 'public-read',
-                Body: fileStream,
-                Key: bucketPath,
-                CacheControl: CACHE_CONTROL || undefined,
-                ContentType: mime_types_1.lookup(p.path) || 'text/plain',
-            };
-            return upload(params);
-        }));
-        core.info(`object key - ${destinationDir}`);
-        core.info(`object locations - ${results}`);
-        core.setOutput('object_key', destinationDir);
-        core.setOutput('object_locations', results);
-        core.info('BORDEL DE MERDE FONCTIONNE');
+        try {
+            const sourceDir = path.join(process.cwd(), SOURCE_DIR);
+            core.info('Starting Miaxos/s3');
+            const results = yield Promise.all(paths.map((p) => {
+                const fileStream = fs.createReadStream(p.path);
+                const bucketPath = destinationDir === ''
+                    ? path.relative(sourceDir, p.path)
+                    : path.join(destinationDir, path.relative(sourceDir, p.path));
+                console.log('bucketKey', bucketPath);
+                console.log(destinationDir);
+                console.log(path.relative(sourceDir, p.path));
+                const params = {
+                    Bucket: BUCKET,
+                    ACL: 'public-read',
+                    Body: fileStream,
+                    Key: bucketPath,
+                    CacheControl: CACHE_CONTROL || undefined,
+                    ContentType: mime_types_1.lookup(p.path) || 'text/plain',
+                };
+                return upload(params);
+            }));
+            core.info(`object key - ${destinationDir}`);
+            core.info(`object locations - ${results}`);
+            core.setOutput('object_key', destinationDir);
+            core.setOutput('object_locations', results);
+            return results;
+        }
+        catch (err) {
+            core.info('Error');
+            core.info(err);
+            core.error(err);
+            core.setFailed(err.message);
+        }
     });
 }
-run().catch((err) => {
-    core.info('Error');
-    core.info(err);
-    core.error(err);
-    core.setFailed(err.message);
-});
+run();
