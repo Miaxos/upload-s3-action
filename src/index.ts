@@ -76,9 +76,10 @@ async function run() {
 
     core.info(`object key - ${destinationDir}`);
     core.info(`object locations - ${results}`);
-    // core.setOutput('object_key', destinationDir);
-    // core.setOutput('object_locations', results);
-    return results;
+    core.setOutput('object_key', destinationDir);
+    core.setOutput('object_locations', results);
+    // FUCK IT !!!!!!!!!!!!!!!!!!!!!!
+    process.exit(0);
   } catch (err) {
     core.info('Error');
     core.info(err);
