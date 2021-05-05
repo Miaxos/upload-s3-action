@@ -33,8 +33,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const s3_1 = __importDefault(require("aws-sdk/clients/s3"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 const klaw_sync_1 = __importDefault(require("klaw-sync"));
 const mime_types_1 = require("mime-types");
 const AWS_KEY_ID = core.getInput('aws_key_id', {
@@ -80,16 +80,16 @@ function upload(params) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const sourceDir = path_1.default.join(process.cwd(), SOURCE_DIR);
+        const sourceDir = path.join(process.cwd(), SOURCE_DIR);
         core.info('Starting Miaxos/s3');
         const results = yield Promise.all(paths.map((p) => {
-            const fileStream = fs_1.default.createReadStream(p.path);
+            const fileStream = fs.createReadStream(p.path);
             const bucketPath = destinationDir === ''
-                ? path_1.default.relative(sourceDir, p.path)
-                : path_1.default.join(destinationDir, path_1.default.relative(sourceDir, p.path));
+                ? path.relative(sourceDir, p.path)
+                : path.join(destinationDir, path.relative(sourceDir, p.path));
             console.log('bucketKey', bucketPath);
             console.log(destinationDir);
-            console.log(path_1.default.relative(sourceDir, p.path));
+            console.log(path.relative(sourceDir, p.path));
             const params = {
                 Bucket: BUCKET,
                 ACL: 'public-read',

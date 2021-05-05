@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import * as S3 from 'aws-sdk/clients/s3';
+import S3 from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as klawSync from 'klaw-sync';
+import klawSync from 'klaw-sync';
 import { lookup } from 'mime-types';
 
 const AWS_KEY_ID = core.getInput('aws_key_id', {
