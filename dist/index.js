@@ -103,8 +103,8 @@ function run() {
             }));
             core.info(`object key - ${destinationDir}`);
             core.info(`object locations - ${results}`);
-            core.setOutput('object_key', destinationDir);
-            core.setOutput('object_locations', results);
+            // core.setOutput('object_key', destinationDir);
+            // core.setOutput('object_locations', results);
             return results;
         }
         catch (err) {
