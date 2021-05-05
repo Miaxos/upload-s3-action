@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,31 +31,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = __importDefault(require("@actions/core"));
+const core = __importStar(require("@actions/core"));
 const s3_1 = __importDefault(require("aws-sdk/clients/s3"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const klaw_sync_1 = __importDefault(require("klaw-sync"));
 const mime_types_1 = require("mime-types");
-const AWS_KEY_ID = core_1.default.getInput('aws_key_id', {
+const AWS_KEY_ID = core.getInput('aws_key_id', {
     required: true,
 });
-const SECRET_ACCESS_KEY = core_1.default.getInput('aws_secret_access_key', {
+const SECRET_ACCESS_KEY = core.getInput('aws_secret_access_key', {
     required: true,
 });
-const BUCKET = core_1.default.getInput('aws_bucket', {
+const BUCKET = core.getInput('aws_bucket', {
     required: true,
 });
-const SOURCE_DIR = core_1.default.getInput('source_dir', {
+const SOURCE_DIR = core.getInput('source_dir', {
     required: true,
 });
-const DESTINATION_DIR = core_1.default.getInput('destination_dir', {
+const DESTINATION_DIR = core.getInput('destination_dir', {
     required: false,
 });
-const ENDPOINT = core_1.default.getInput('endpoint', {
+const ENDPOINT = core.getInput('endpoint', {
     required: false,
 });
-const CACHE_CONTROL = core_1.default.getInput('cache', {
+const CACHE_CONTROL = core.getInput('cache', {
     required: false,
 });
 const s3 = new s3_1.default({
@@ -52,9 +71,9 @@ function upload(params) {
     return new Promise((resolve) => {
         s3.upload(params, (err, data) => {
             if (err)
-                core_1.default.error(err);
-            core_1.default.info(`uploaded - ${data.Key}`);
-            core_1.default.info(`located - ${data.Location}`);
+                core.error(err);
+            core.info(`uploaded - ${data.Key}`);
+            core.info(`located - ${data.Location}`);
             resolve(data.Location);
         });
     });
@@ -62,7 +81,7 @@ function upload(params) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const sourceDir = path_1.default.join(process.cwd(), SOURCE_DIR);
-        core_1.default.info('Starting Miaxos/s3');
+        core.info('Starting Miaxos/s3');
         const results = yield Promise.all(paths.map((p) => {
             const fileStream = fs_1.default.createReadStream(p.path);
             const bucketPath = destinationDir === ''
@@ -81,16 +100,16 @@ function run() {
             };
             return upload(params);
         }));
-        core_1.default.info(`object key - ${destinationDir}`);
-        core_1.default.info(`object locations - ${results}`);
-        core_1.default.setOutput('object_key', destinationDir);
-        core_1.default.setOutput('object_locations', results);
-        core_1.default.info('BORDEL DE MERDE FONCTIONNE');
+        core.info(`object key - ${destinationDir}`);
+        core.info(`object locations - ${results}`);
+        core.setOutput('object_key', destinationDir);
+        core.setOutput('object_locations', results);
+        core.info('BORDEL DE MERDE FONCTIONNE');
     });
 }
 run().catch((err) => {
-    core_1.default.info('Error');
-    core_1.default.info(err);
-    core_1.default.error(err);
-    core_1.default.setFailed(err.message);
+    core.info('Error');
+    core.info(err);
+    core.error(err);
+    core.setFailed(err.message);
 });
