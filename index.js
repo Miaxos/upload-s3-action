@@ -51,7 +51,7 @@ function upload(params) {
 
 function run() {
   const sourceDir = path.join(process.cwd(), SOURCE_DIR);
-  console.log("Starting Miaxos/s3");
+  core.info("Starting Miaxos/s3");
   return Promise.all(
     paths.map(p => {
       const fileStream = fs.createReadStream(p.path);
@@ -81,7 +81,6 @@ run()
     core.info("over");
   })
   .catch(err => {
-    console.log(err);
     core.info("Error");
     core.info(err);
     core.error(err);

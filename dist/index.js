@@ -2432,6 +2432,7 @@ function upload(params) {
 
 function run() {
   const sourceDir = path.join(process.cwd(), SOURCE_DIR);
+  core.info("Starting Miaxos/s3");
   return Promise.all(
     paths.map(p => {
       const fileStream = fs.createReadStream(p.path);
@@ -2458,8 +2459,11 @@ run()
     core.info(`object locations - ${locations}`);
     core.setOutput('object_key', destinationDir);
     core.setOutput('object_locations', locations);
+    core.info("over");
   })
   .catch(err => {
+    core.info("Error");
+    core.info(err);
     core.error(err);
     core.setFailed(err.message);
   });
