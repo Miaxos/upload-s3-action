@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
+    "@types/node": "^15.0.2",
     "aws-sdk": "^2.641.0",
     "klaw-sync": "^6.0.0",
     "mime-types": "^2.1.26",
