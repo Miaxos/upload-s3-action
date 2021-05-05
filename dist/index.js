@@ -2453,7 +2453,13 @@ function run() {
   );
 }
 
-run()
+run().catch(err => {
+    core.info("Error");
+    core.info(err);
+    core.error(err);
+    core.setFailed(err.message);
+  });
+/*
   .then(locations => {
     core.info(`object key - ${destinationDir}`);
     core.info(`object locations - ${locations}`);
@@ -2462,12 +2468,7 @@ run()
     core.info("over");
     return undefined;
   })
-  .catch(err => {
-    core.info("Error");
-    core.info(err);
-    core.error(err);
-    core.setFailed(err.message);
-  });
+  */
 
 
 /***/ }),
