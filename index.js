@@ -79,7 +79,7 @@ run()
     core.setOutput('object_key', destinationDir);
     core.setOutput('object_locations', locations);
     core.info("over");
-    return Promise.resolve(undefined);
+    return undefined;
   })
   .catch(err => {
     core.info("Error");
