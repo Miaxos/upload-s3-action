@@ -4,6 +4,7 @@ author: 'Dong Keon Kim'
 branding:
   icon: 'upload-cloud'
   color: 'orange'
+
 inputs:
   aws_key_id:
     description: 'aws key id'
